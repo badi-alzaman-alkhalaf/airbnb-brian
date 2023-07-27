@@ -7,6 +7,9 @@ from django.views.generic import ListView ,DetailView
 # Create your views here.
 class PropertListView(ListView):
     model = models.Property
+    paginate_by = 1
+    
+    
     
     
 class PropertyDetailView(DetailView):

@@ -9,7 +9,7 @@ from taggit.managers import TaggableManager
 
 class Property(models.Model):
     title = models.CharField(max_length=50)
-    description = models.TextField(max_length =500)
+    description = models.TextField(max_length = 2000)
     owner = models.ForeignKey(User, related_name="property_owner", on_delete=models.CASCADE)
     image = models.ImageField(upload_to='property_images/')
     place = models.ForeignKey("PropertyPlace", related_name="property_place", on_delete=models.CASCADE)
