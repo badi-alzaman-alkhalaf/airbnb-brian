@@ -1,8 +1,9 @@
-from random import choices
-from tkinter import CASCADE
+from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
+from django.urls import reverse
+from taggit.managers import TaggableManager
 # Create your models here.
 
 
@@ -13,6 +14,7 @@ class Property(models.Model):
     image = models.ImageField(upload_to='property_images/')
     place = models.ForeignKey("PropertyPlace", related_name="property_place", on_delete=models.CASCADE)
     price = models.IntegerField()
+    tags = TaggableManager()
     category = models.ForeignKey('Category', related_name='property_category', on_delete=models.CASCADE)
     slug = models.SlugField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now=True)
@@ -21,11 +23,18 @@ class Property(models.Model):
     def save(self, *args, **kwargs):
         if self.title:
             self.slug = slugify(self.title)
-        super(Property, self).save(*args, **kwargs) # Call the real save() method
+        super(Property, self).save(*args, **kwargs) 
+        
+        
+    def get_absolute_url(self):
+        return reverse('property:property_detail', kwargs={'slug': self.slug})
+    
     
     def __str__(self):
         return self.title
-
+    
+    
+    
 class PropertyPlace(models.Model):
     name = models.CharField(max_length=200)
     image = models.ImageField(upload_to="place/")
@@ -72,3 +81,5 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+    
+
