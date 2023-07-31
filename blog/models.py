@@ -1,10 +1,10 @@
-from tkinter import CASCADE
-from xmlrpc.client import DateTime
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.urls import reverse
 from django.utils import timezone
+from taggit.managers import TaggableManager
+
 # Create your models here.
 class Post(models.Model):
     author = models.ForeignKey(User, related_name="post_author", on_delete=models.CASCADE)
@@ -12,7 +12,7 @@ class Post(models.Model):
     description = models.TextField(max_length=1000)
     image = models.ImageField(upload_to='post_images')
     date = models.DateField(default=timezone.now)
-    tags = ''
+    tags = TaggableManager()
     categories = models.ManyToManyField("Category",related_name="post_category", blank=True)
     slug = models.SlugField(verbose_name='slug' ,blank=True, null=True)
 
@@ -26,9 +26,9 @@ class Post(models.Model):
         verbose_name_plural = ("Posts")
 
     def __str__(self):
-        return self.name
+        return self.title
     def get_absolute_url(self):
-        return reverse("post_detail", kwargs={"pk": self.pk})
+        return reverse("blog:post_detail", kwargs={"slug": self.slug})
     
 class Category(models.Model):
     name = models.CharField(max_length=25)
