@@ -1,11 +1,10 @@
-from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.urls import reverse
 from taggit.managers import TaggableManager
 # Create your models here.
-
+from django.utils import timezone
 
 class Property(models.Model):
     title = models.CharField(max_length=50)
@@ -70,8 +69,8 @@ class PropertyRate(models.Model):
 class PropertyReservation(models.Model):
     owner = models.ForeignKey(User, related_name="reservation_owner", on_delete=models.CASCADE)
     property = models.ForeignKey(Property, related_name="property_reservation", on_delete=models.CASCADE)
-    date_from = models.DateField(auto_now=False, auto_now_add=False)
-    date_to = models.DateField(auto_now=False, auto_now_add=False)
+    date_from = models.DateField(default=timezone.now)
+    date_to = models.DateField(default=timezone.now)
     guest = models.IntegerField(choices=rate_valus, default=1)
     children = models.IntegerField(choices=rate_valus, default=1)
 
