@@ -149,7 +149,7 @@
                                                     class="price per-price">${{room.price}}<br><small>/night</small></span>
                                             </div>
                                         </div>
-                                        <p>{{property.description|safe}}</p>
+                                        <p>{{property.description|safe|truncatewords_html:5}}</p>
                                         <hr>
                                         <p class="bottom-area d-flex">
                                             <span><i class="icon-map-o"></i> {{room.place}}</span>

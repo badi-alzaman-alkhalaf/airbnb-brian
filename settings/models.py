@@ -1,6 +1,3 @@
-from distutils.command.upload import upload
-from numbers import Integral
-from turtle import title
 from django.db import models
 
 # Create your models here.
@@ -16,9 +13,9 @@ class About(models.Model):
     class Meta:
         verbose_name = ("About")
         verbose_name_plural = ("Abouts")
-
+        
     def __str__(self):
-        return self.id
+        return str(self.id) # type: ignore 
     
 class Faq(models.Model):
     title = models.CharField(max_length=200)
@@ -33,9 +30,9 @@ class Faq(models.Model):
     
     
 class Info(models.Model):
-    name = models.CharField(max_length=200)
+    site_name = models.CharField(max_length=200)
     logo = models.ImageField(upload_to='info/')
-    descrpition = models.TextField(max_length=1000)
+    description = models.TextField(max_length=1000)
     address = models.CharField(max_length=200)
     phone_number = models.CharField(max_length=30)
     fb_url = models.URLField(max_length=200)
@@ -49,4 +46,4 @@ class Info(models.Model):
         verbose_name_plural = ("Infos")
 
     def __str__(self):
-        return self.name
+        return self.site_name

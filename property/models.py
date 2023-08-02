@@ -75,7 +75,7 @@ class PropertyReservation(models.Model):
     children = models.IntegerField(choices=rate_valus, default=1)
 
 class Category(models.Model):
-    icon = models.ImageField(upload_to='category/', blank=True, null=True)
+    icon = models.CharField(max_length=255, default='')
     name = models.CharField(max_length=255, default='')
 
     def __str__(self):
