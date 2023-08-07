@@ -1,10 +1,10 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 from django.utils.text import slugify
 from django.urls import reverse
 from taggit.managers import TaggableManager
-# Create your models here.
 from django.utils import timezone
+# Create your models here.
 
 class Property(models.Model):
     title = models.CharField(max_length=50)
@@ -28,6 +28,14 @@ class Property(models.Model):
     def get_absolute_url(self):
         return reverse('property:property_detail', kwargs={'slug': self.slug})
     
+    def avg_rate(self): 
+        rates = self.property_rates.all() # type: ignore
+        rating = sum(rate.rate for rate in rates)
+        return rating/len(rates) if rating > 0 else 0
+    
+    def check_availability(self):
+        pass
+        
     
     def __str__(self):
         return self.title
@@ -49,7 +57,7 @@ class PropertyImages(models.Model):
     def __str__(self):
         return self.property.title
     
-rate_valus = [
+rate_values = [
     (0, 0),
     (1, 1),
     (2, 2),
@@ -58,7 +66,7 @@ rate_valus = [
     (5, 5),
 ]
 class PropertyRate(models.Model):
-    rate = models.IntegerField(choices=rate_valus, default=0)
+    rate = models.IntegerField(choices=rate_values, default=0)
     owner = models.ForeignKey(User, related_name="rate_owner", on_delete=models.CASCADE)
     property = models.ForeignKey(Property, related_name="property_rates", on_delete=models.CASCADE)
     feedback = models.TextField(max_length=200, default="")
@@ -71,8 +79,8 @@ class PropertyReservation(models.Model):
     property = models.ForeignKey(Property, related_name="property_reservation", on_delete=models.CASCADE)
     date_from = models.DateField(default=timezone.now)
     date_to = models.DateField(default=timezone.now)
-    guest = models.IntegerField(choices=rate_valus, default=1)
-    children = models.IntegerField(choices=rate_valus, default=1)
+    guest = models.IntegerField(choices=rate_values, default=1)
+    children = models.IntegerField(choices=rate_values, default=1)
 
 class Category(models.Model):
     icon = models.CharField(max_length=255, default='')
