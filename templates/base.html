@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -43,19 +44,37 @@
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item active"><a href="/" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="{% url 'settings:about' %}" class="nav-link">About</a></li>
-                    <li class="nav-item"><a href="{% url 'property:property_list' %}" class="nav-link">Properties</a></li>
-                    <li class="nav-item"><a href="{% url 'blog:post_list' %}" class="nav-link">Blog</a></li>
+                    <li class="nav-item"><a href="{% url 'settings:about' %}"
+                            class="nav-link">{% translate "About" %}</a></li>
+                    <li class="nav-item"><a href="{% url 'property:property_list' %}"
+                            class="nav-link">{% translate "Properties" %}</a></li>
+                    <li class="nav-item"><a href="{% url 'blog:post_list' %}"
+                            class="nav-link">{% translate "Blog" %}</a></li>
                     <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
                     <li class="nav-item cta"><a href="contact.html" class="nav-link"><span>Add listing</span></a></li>
+                    <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ redirect_to }}">
+                        <select name="language">
+                            {% get_current_language as LANGUAGE_CODE %}
+                            {% get_available_languages as LANGUAGES %}
+                            {% get_language_info_list for LANGUAGES as languages %}
+                            {% for language in languages %}
+                                <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                                    {{ language.name_local }} ({{ language.code }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <input type="submit" value="Go">
+                    </form>
                 </ul>
             </div>
         </div>
     </nav>
     <!-- END nav -->
-        {% block body %}
-        
-        {% endblock body %}
+    {% block body %}
+
+    {% endblock body %}
     <footer class="ftco-footer ftco-bg-dark ftco-section">
         <div class="container">
             <div class="row mb-5">
@@ -100,10 +119,12 @@
                         <h2 class="ftco-heading-2">Have a Questions?</h2>
                         <div class="block-23 mb-3">
                             <ul>
-                                <li><span class="icon icon-map-marker"></span><span class="text">{{footer.address}}</span></li>
-                                <li><a href="#"><span class="icon icon-phone"></span><span class="text">{{footer.phone_number}}</span></a></li>
+                                <li><span class="icon icon-map-marker"></span><span
+                                        class="text">{{footer.address}}</span></li>
+                                <li><a href="#"><span class="icon icon-phone"></span><span
+                                            class="text">{{footer.phone_number}}</span></a></li>
                                 <li><a href="#"><span class="icon icon-envelope"></span>
-                                    <span class="text">{{footer.email}}</span></a></li>
+                                        <span class="text">{{footer.email}}</span></a></li>
                             </ul>
                         </div>
                     </div>
@@ -150,4 +171,5 @@
     <script src="{% static 'js/main.js' %}"></script>
 
 </body>
+
 </html>
