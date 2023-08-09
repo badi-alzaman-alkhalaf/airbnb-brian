@@ -57,6 +57,12 @@
                         </p>
                         <p>{{property.description|safe}}</p>
                     </div>
+                    
+                    {% if  property.check_availability != 'available' %}
+                        <h4> {{ property.check_availability }} </h4>
+                    {% else %}
+                        <h4> the Room is available</h4>
+                    {% endif %}
                     <div class="col-md-12 hotel-single ftco-animate mb-5 mt-4">
                         <h4 class="mb-5">Check Availability &amp; Booking</h4>
                         <form method="post" class="form">

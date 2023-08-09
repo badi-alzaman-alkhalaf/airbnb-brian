@@ -34,9 +34,16 @@ class Property(models.Model):
         return rating/len(rates) if rating > 0 else 0
     
     def check_availability(self):
-        pass
-        
-    
+        books = self.property_reservation.all() # type: ignore
+        now = timezone.now().date() # type: ignore
+        for book in books:
+            if now < book.date_from and  now > book.date_to:
+                return "available"
+            else:
+                return "the Room in Progress until {}".format(book.date_to)
+        else:
+            return "available"
+            
     def __str__(self):
         return self.title
     
@@ -81,6 +88,12 @@ class PropertyReservation(models.Model):
     date_to = models.DateField(default=timezone.now)
     guest = models.IntegerField(choices=rate_values, default=1)
     children = models.IntegerField(choices=rate_values, default=1)
+    
+    def in_progress(self):
+        now = timezone.now().date()
+        return now > self.date_to and now < self.date_from
+    
+    in_progress.boolean = True
 
 class Category(models.Model):
     icon = models.CharField(max_length=255, default='')
